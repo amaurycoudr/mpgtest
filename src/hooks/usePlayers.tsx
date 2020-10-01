@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 import { BASE_URL } from '../../const';
 type Action = {
     type: string;
@@ -12,16 +12,13 @@ const playersReducer = (state: object, action: Action) => {
                 errorMessage: action.payload,
             };
         case 'filterName':
-            return { ...state, name: action.payload };
+            return { ...state, errorMessage: '', name: action.payload };
         case 'filterPosition':
-            return { ...state, position: action.payload };
+            return { ...state, errorMessage: '', position: action.payload };
         case 'filterClub':
-            return { ...state, club: action.payload };
+            return { ...state, errorMessage: '', club: action.payload };
         case 'fetchPlayers':
-            return {
-                ...state,
-                players: action.payload,
-            };
+            return { ...state, errorMessage: '', players: action.payload };
     }
 };
 const initialState = {
@@ -32,11 +29,8 @@ const initialState = {
     errorMessage: '',
 };
 
-const Context = React.createContext(initialState);
-
-const Provider = ({ children }) => {
+export const usePlayers = () => {
     const [state, dispatch] = useReducer(playersReducer, initialState);
-
     const fetchPlayer = (dispatch: Function) => async () => {
         try {
             let result = await (
@@ -62,7 +56,6 @@ const Provider = ({ children }) => {
             });
         }
     };
-
     const filterName = (dispatch) => (name) => {
         dispatch({ payload: name, type: 'filterName' });
     };
@@ -72,19 +65,21 @@ const Provider = ({ children }) => {
     const filterClub = (dispatch) => (club) => {
         dispatch({ payload: club, type: 'filterClub' });
     };
-
-    return (
-        <Context.Provider
-            value={{
-                state,
-                fetchPlayer: fetchPlayer(dispatch),
-                filterName: filterName(dispatch),
-                filterPosition: filterPosition(dispatch),
-                filterClub: filterClub(dispatch),
-            }}
-        >
-            {children}
-        </Context.Provider>
-    );
+    const filterError = (dispatch) => () => {
+        dispatch({
+            payload: 'Aucun joueur ne semble correspondre à ta recherche :(',
+            type: 'error',
+        });
+    };
+    useEffect(() => {
+        fetchPlayer(dispatch)();
+    }, []);
+    return {
+        state,
+        fetchPlayer: fetchPlayer(dispatch),
+        filterName: filterName(dispatch),
+        filterPosition: filterPosition(dispatch),
+        filterClub: filterClub(dispatch),
+        filterError: filterError(dispatch),
+    };
 };
-export { Context, Provider };

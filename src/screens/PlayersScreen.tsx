@@ -5,7 +5,8 @@ import Divider from '../components/Divider';
 import ListFilter from '../components/ListFilter';
 import NameInput from '../components/NameInput';
 import PlayerThumbnail from '../components/PlayerThumbnail';
-import { Context } from '../context/PlayersContext';
+import { usePlayers } from '../hooks/usePlayers';
+
 import { convertClub, convertPositionShort } from '../helpers/conversion';
 
 const PlayersScreen = ({ navigation }) => {
@@ -15,13 +16,10 @@ const PlayersScreen = ({ navigation }) => {
         filterName,
         filterPosition,
         filterClub,
-    } = useContext(Context);
+        filterError,
+    } = usePlayers();
     const { players, club, position, name, errorMessage } = state;
     const [playersShowed, setPlayersShowed] = useState([]);
-
-    useEffect(() => {
-        fetchPlayer();
-    }, []);
     useEffect(() => {
         let result = players;
         if (name.length > 0) {
@@ -38,6 +36,9 @@ const PlayersScreen = ({ navigation }) => {
             result = result.filter((player) => {
                 return player.club === convertClub(club);
             });
+        }
+        if (result.length === 0 && players.length > 0) {
+            filterError();
         }
         setPlayersShowed(result);
     }, [players, position, name, club]);
