@@ -48,7 +48,7 @@ const initialState: StateType = {
 
 export const usePlayers = () => {
     const [state, dispatch] = useReducer(playersReducer, initialState);
-    const fetchPlayer = (dispatch: Dispatch<ActionType>) => async () => {
+    const fetchPlayers = (dispatch: Dispatch<ActionType>) => async () => {
         try {
             let result = await (
                 await fetch(BASE_URL + 'championship/1/2018')
@@ -95,11 +95,11 @@ export const usePlayers = () => {
         });
     };
     useEffect(() => {
-        fetchPlayer(dispatch)();
+        fetchPlayers(dispatch)();
     }, []);
     return {
         state,
-        fetchPlayer: fetchPlayer(dispatch),
+        fetchPlayers: fetchPlayers(dispatch),
         filterName: filterName(dispatch),
         filterPosition: filterPosition(dispatch),
         filterClub: filterClub(dispatch),
