@@ -19,20 +19,20 @@ React 16.13 (`utilisation des hooks`), react-navigation 5, typescript
 ## src/screens
 
 Dossier contenant les différents `screen` du projet (PlayersScreen et PlayersDetailScreen)
-les Screens contienent `la structure de la View` est peu d'element de logique (sauf pour `PlayerDetail` avec la selection des `playersShowed` qui ce fait dans le screen, ce qui n'est sans doute pas optimal)
+les Screens contienent `la structure de la View` et quelques petits éléments de logique ( Pour `PlayersScreen` la selection des `playersShowed` ce fait dans le screen, ce qui n'est sans doute pas optimal)
 
 ## src/components
 
-Dossier contenant les différents `element visuel` (Divider, PlayerThumbnail, PlayerDetail...).
+Dossier contenant les différents `elements visuel` (Divider, PlayerThumbnail, PlayerDetail...).
 Très peu de logique.
 
 ## src/helpers
 
-Contient des `fonctions pratiques` pour le projet (ex : convertPositionShort qui fait la conversion entre ), et des `const` importante (ex : url de l'api)
+Contient des `fonctions pratiques` pour le projet (ex : convertPositionShort qui fait la conversion d'un nombre (10) en une position ('G') ), et des `const` importante (ex : url de l'api)
 
 ## src/hooks
 
-Contient les hooks créer pour gérer les éléments de logique :
+Contient les hooks créés pour gérer les éléments de logique :
 
 ### usePlayers
 
