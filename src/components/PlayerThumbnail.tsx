@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Divider from './Divider';
 import { convertPositionShort } from '../helpers/conversion';
-
-const PlayerThumbnail = ({ name, ultraPosition, club, navigate }) => {
+type PlayerThumbnailProp = {
+    name: string;
+    ultraPosition: number;
+    club: string;
+    navigate(): void;
+};
+const PlayerThumbnail: FunctionComponent<PlayerThumbnailProp> = ({
+    name,
+    ultraPosition,
+    club,
+    navigate,
+}) => {
     return (
         <View style={styles.thumbStyle}>
             <TouchableOpacity onPress={navigate}>
@@ -23,11 +33,6 @@ const PlayerThumbnail = ({ name, ultraPosition, club, navigate }) => {
 
 export default PlayerThumbnail;
 
-PlayerThumbnail.propTypes = {
-    name: PropTypes.string.isRequired,
-    ultraPosition: PropTypes.number.isRequired,
-    club: PropTypes.string,
-};
 const styles = StyleSheet.create({
     nameStyle: {
         fontWeight: 'bold',

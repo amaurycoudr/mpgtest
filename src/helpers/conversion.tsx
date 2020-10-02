@@ -1,4 +1,4 @@
-export const convertPositionFull = (postion) => {
+export const convertPositionFull = (postion: number) => {
     switch (postion) {
         case 10:
             return 'Gardien';
@@ -16,7 +16,7 @@ export const convertPositionFull = (postion) => {
             break;
     }
 };
-export const convertPositionShort = (postion) => {
+export const convertPositionShort = (postion: number) => {
     switch (postion) {
         case 10:
             return 'G';
@@ -34,7 +34,7 @@ export const convertPositionShort = (postion) => {
             break;
     }
 };
-export const convertClub = (club) => {
+export const convertClub = (club: number) => {
     switch (club) {
         case 0:
             return 'Paris';

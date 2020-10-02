@@ -1,39 +1,50 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, View, StyleSheet, Text } from 'react-native';
-import { clubs, positions } from '../../const';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PlayerType } from '../hooks/usePlayers';
+import { FlatList, View } from 'react-native';
+import { clubs, positions } from '../helpers/const';
 import Divider from '../components/Divider';
 import ListFilter from '../components/ListFilter';
 import NameInput from '../components/NameInput';
 import PlayerThumbnail from '../components/PlayerThumbnail';
+import ErrorText from '../components/ErrorText';
 import { usePlayers } from '../hooks/usePlayers';
-
 import { convertClub, convertPositionShort } from '../helpers/conversion';
 
-const PlayersScreen = ({ navigation }) => {
+export type RootParamList = {
+    Player: { id: number };
+};
+type PlayersScreenProps = {
+    navigation: StackNavigationProp<RootParamList, 'Player'>;
+};
+
+const PlayersScreen: FunctionComponent<PlayersScreenProps> = ({
+    navigation,
+}) => {
     const {
         state,
-        fetchPlayer,
         filterName,
         filterPosition,
         filterClub,
         filterError,
     } = usePlayers();
+    const init: Array<PlayerType> = [];
     const { players, club, position, name, errorMessage } = state;
-    const [playersShowed, setPlayersShowed] = useState([]);
+    const [playersShowed, setPlayersShowed] = useState(init);
     useEffect(() => {
         let result = players;
         if (name.length > 0) {
-            result = result.filter((player) => {
+            result = result.filter((player: PlayerType) => {
                 return player.name.toUpperCase().includes(name.toUpperCase());
             });
         }
         if (position > 0) {
-            result = result.filter((player) => {
+            result = result.filter((player: PlayerType) => {
                 return player.ultraPosition === position;
             });
         }
-        if (club > 0) {
-            result = result.filter((player) => {
+        if (club >= 0) {
+            result = result.filter((player: PlayerType) => {
                 return player.club === convertClub(club);
             });
         }
@@ -66,8 +77,10 @@ const PlayersScreen = ({ navigation }) => {
             {playersShowed.length > 0 ? (
                 <FlatList
                     data={playersShowed}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
+                    keyExtractor={(item: PlayerType, index) =>
+                        item.id.toString()
+                    }
+                    renderItem={({ item }: { item: PlayerType }) => (
                         <PlayerThumbnail
                             name={item.name}
                             club={item.club}
@@ -78,15 +91,17 @@ const PlayersScreen = ({ navigation }) => {
                         />
                     )}
                 />
-            ) : errorMessage.length === 0 ? (
-                <Text>wait please</Text>
             ) : (
-                <Text>{errorMessage}</Text>
+                <ErrorText
+                    text={
+                        errorMessage.length > 0
+                            ? errorMessage
+                            : 'patiente un peu ...'
+                    }
+                />
             )}
         </View>
     );
 };
 
 export default PlayersScreen;
-
-const styles = StyleSheet.create({});

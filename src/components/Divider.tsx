@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const Divider = () => {
+const Divider: FunctionComponent = () => {
     return <View style={styles.dividerStyle} />;
 };
 

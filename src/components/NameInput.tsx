@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { TextInput, StyleSheet, View } from 'react-native';
-import Divider from './Divider';
-
-const NameInput = ({ filterName }) => {
+type NameInputProps = {
+    filterName: Function;
+};
+const NameInput: FunctionComponent<NameInputProps> = ({ filterName }) => {
     const [inputName, setInputName] = useState('');
-    const handleTextChange = (e) => {
+
+    const handleTextChange = (e: string) => {
         const name = e;
         setInputName(name);
         filterName(name);

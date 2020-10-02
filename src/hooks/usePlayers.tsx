@@ -1,10 +1,27 @@
-import { useReducer, useEffect } from 'react';
-import { BASE_URL } from '../../const';
-type Action = {
-    type: string;
-    payload: Function;
+import { useReducer, useEffect, Dispatch } from 'react';
+import { BASE_URL } from '../helpers/const';
+export type PlayerType = {
+    name: string;
+    ultraPosition: number;
+    club: string;
+    id: number;
+    position: number;
 };
-const playersReducer = (state: object, action: Action) => {
+type StateType = {
+    players: Array<PlayerType>;
+    name: string;
+    position: number;
+    club: number;
+    errorMessage: string;
+};
+type ActionType =
+    | { type: 'error'; payload: string }
+    | { type: 'filterName'; payload: string }
+    | { type: 'filterPosition'; payload: number }
+    | { type: 'filterClub'; payload: number }
+    | { type: 'fetchPlayers'; payload: Array<PlayerType> };
+
+const playersReducer = (state: StateType, action: ActionType): StateType => {
     switch (action.type) {
         case 'error':
             return {
@@ -21,22 +38,22 @@ const playersReducer = (state: object, action: Action) => {
             return { ...state, errorMessage: '', players: action.payload };
     }
 };
-const initialState = {
+const initialState: StateType = {
     players: [],
     name: '',
-    postion: '',
-    club: '',
+    position: 0,
+    club: -1,
     errorMessage: '',
 };
 
 export const usePlayers = () => {
     const [state, dispatch] = useReducer(playersReducer, initialState);
-    const fetchPlayer = (dispatch: Function) => async () => {
+    const fetchPlayer = (dispatch: Dispatch<ActionType>) => async () => {
         try {
             let result = await (
                 await fetch(BASE_URL + 'championship/1/2018')
             ).json();
-            result.forEach((value) => {
+            result.forEach((value: any) => {
                 delete value.stats;
                 delete value.position;
                 delete value.teamId;
@@ -56,16 +73,22 @@ export const usePlayers = () => {
             });
         }
     };
-    const filterName = (dispatch) => (name) => {
+    const filterName = (dispatch: Dispatch<ActionType>) => (
+        name: StateType['name']
+    ) => {
         dispatch({ payload: name, type: 'filterName' });
     };
-    const filterPosition = (dispatch) => (position) => {
+    const filterPosition = (dispatch: Dispatch<ActionType>) => (
+        position: StateType['position']
+    ) => {
         dispatch({ payload: position, type: 'filterPosition' });
     };
-    const filterClub = (dispatch) => (club) => {
+    const filterClub = (dispatch: Dispatch<ActionType>) => (
+        club: StateType['club']
+    ) => {
         dispatch({ payload: club, type: 'filterClub' });
     };
-    const filterError = (dispatch) => () => {
+    const filterError = (dispatch: Dispatch<ActionType>) => () => {
         dispatch({
             payload: 'Aucun joueur ne semble correspondre à ta recherche :(',
             type: 'error',

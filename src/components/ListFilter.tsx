@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-const ListFilter = ({ list, filter, title, convert, selected }) => {
+type ListFilterProps = {
+    list: Array<Number>;
+    filter: Function;
+    title: string;
+    convert: Function;
+    selected: Number;
+};
+const ListFilter: FunctionComponent<ListFilterProps> = ({
+    list,
+    filter,
+    title,
+    convert,
+    selected,
+}) => {
     return (
         <View style={styles.viewStyle}>
             <View style={styles.filterStyle}>
@@ -10,7 +23,7 @@ const ListFilter = ({ list, filter, title, convert, selected }) => {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={list}
-                    keyExtractor={(index) => index}
+                    keyExtractor={(index) => index.toString()}
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => filter(item)}>
                             <Text
@@ -19,7 +32,7 @@ const ListFilter = ({ list, filter, title, convert, selected }) => {
                                     selected === item && styles.selected,
                                 ]}
                             >
-                                {convert(item)}
+                                {convert(item).toString()}
                             </Text>
                         </TouchableOpacity>
                     )}
