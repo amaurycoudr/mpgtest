@@ -37,7 +37,7 @@ const usePlayer = (id: number) => {
             };
             setPlayer(player);
         } catch (error) {
-            console.log('prout');
+            console.log(error);
         }
     };
     useEffect(() => {
